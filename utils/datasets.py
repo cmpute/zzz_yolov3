@@ -65,17 +65,17 @@ class LoadImages:  # for inference
                     ret_val, img0 = self.cap.read()
 
             self.frame += 1
-            print('video %g/%g (%g/%g) %s: ' % (self.count + 1, self.nF, self.frame, self.nframes, path), end='')
+            print('video %g/%g (%g/%g) %s: ' % (self.count + 1, self.nF, self.frame, self.nframes, path))
 
         else:
             # Read image
             self.count += 1
             img0 = cv2.imread(path)  # BGR
             assert img0 is not None, 'File Not Found ' + path
-            print('image %g/%g %s: ' % (self.count, self.nF, path), end='')
+            print('image %g/%g %s: ' % (self.count, self.nF, path))
 
         # Padded resize
-        img, *_ = letterbox(img0, new_shape=self.height)
+        img, _, _, _, _ = letterbox(img0, new_shape=self.height)
 
         # Normalize RGB
         img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB
@@ -114,10 +114,10 @@ class LoadWebcam:  # for inference
         assert ret_val, 'Webcam Error'
         img_path = 'webcam_%g.jpg' % self.count
         img0 = cv2.flip(img0, 1)  # flip left-right
-        print('webcam %g: ' % self.count, end='')
+        print('webcam %g: ' % self.count)
 
         # Padded resize
-        img, *_ = letterbox(img0, new_shape=self.height)
+        img, _, _, _, _ = letterbox(img0, new_shape=self.height)
 
         # Normalize RGB
         img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB
@@ -400,7 +400,7 @@ def random_affine(img, targets=(), degrees=(-10, 10), translate=(.1, .1), scale=
     S[0, 1] = math.tan((random.random() * (shear[1] - shear[0]) + shear[0]) * math.pi / 180)  # x shear (deg)
     S[1, 0] = math.tan((random.random() * (shear[1] - shear[0]) + shear[0]) * math.pi / 180)  # y shear (deg)
 
-    M = S @ T @ R  # Combined rotation matrix. ORDER IS IMPORTANT HERE!!
+    M = S.dot(T).dot(R)  # Combined rotation matrix. ORDER IS IMPORTANT HERE!!
     imw = cv2.warpAffine(img, M[:2], dsize=(width, height), flags=cv2.INTER_AREA,
                          borderValue=borderValue)  # BGR order borderValue
 
@@ -413,7 +413,7 @@ def random_affine(img, targets=(), degrees=(-10, 10), translate=(.1, .1), scale=
         # warp points
         xy = np.ones((n * 4, 3))
         xy[:, :2] = points[:, [0, 1, 2, 3, 0, 3, 2, 1]].reshape(n * 4, 2)  # x1y1, x2y2, x1y2, x2y1
-        xy = (xy @ M.T)[:, :2].reshape(n, 8)
+        xy = (xy.dot(M.T))[:, :2].reshape(n, 8)
 
         # create new boxes
         x = xy[:, [0, 2, 4, 6]]
