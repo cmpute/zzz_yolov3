@@ -2,9 +2,9 @@ import argparse
 import time
 from sys import platform
 
-from models import *
-from utils.datasets import *
-from utils.utils import *
+from yolov3.models import *
+from yolov3.utils.datasets import *
+from yolov3.utils.utils import *
 
 
 def detect(

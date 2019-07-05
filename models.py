@@ -2,8 +2,8 @@ import os
 
 import torch.nn.functional as F
 
-from utils.parse_config import *
-from utils.utils import *
+from yolov3.utils.parse_config import *
+from yolov3.utils.utils import *
 
 ONNX_EXPORT = False
 
