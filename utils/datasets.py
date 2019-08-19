@@ -352,18 +352,18 @@ def letterbox(img, new_shape=416, color=(127.5, 127.5, 127.5), mode='auto'):
 
     # Compute padding https://github.com/ultralytics/yolov3/issues/232
     if mode is 'auto':  # minimum rectangle
-        dw = np.mod(new_shape - new_unpad[0], 32) / 2  # width padding
-        dh = np.mod(new_shape - new_unpad[1], 32) / 2  # height padding
+        dw = np.mod(new_shape - new_unpad[0], 32) / 2.  # width padding
+        dh = np.mod(new_shape - new_unpad[1], 32) / 2.  # height padding
     elif mode is 'square':  # square
-        dw = (new_shape - new_unpad[0]) / 2  # width padding
-        dh = (new_shape - new_unpad[1]) / 2  # height padding
+        dw = (new_shape - new_unpad[0]) / 2.  # width padding
+        dh = (new_shape - new_unpad[1]) / 2.  # height padding
     elif mode is 'rect':  # square
-        dw = (new_shape[1] - new_unpad[0]) / 2  # width padding
-        dh = (new_shape[0] - new_unpad[1]) / 2  # height padding
+        dw = (new_shape[1] - new_unpad[0]) / 2.  # width padding
+        dh = (new_shape[0] - new_unpad[1]) / 2.  # height padding
     elif mode is 'scaleFill':
         dw, dh = 0.0, 0.0
         new_unpad = (new_shape, new_shape)
-        ratiow, ratioh = new_shape / shape[1], new_shape / shape[0]
+        ratiow, ratioh = float(new_shape) / shape[1], float(new_shape) / shape[0]
 
     top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
     left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
